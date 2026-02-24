@@ -1,48 +1,50 @@
+#!/usr/bin/env node
 // src/index.ts
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { getMorningNews } from './tools/get_morning_news.js';
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { getMorningNews } from "./tools/get_morning_news.js";
 
 // Création du serveur MCP
 const server = new McpServer({
-  name: 'morning-tech-news',
-  version: '0.1.0',
+  name: "morning-tech-news",
+  version: "0.1.0",
 });
 
 // ===== TOOL =====
 server.registerTool(
-  'get_morning_news',
+  "get_morning_news",
   {
-    description: 'Récupère les dernières actualités tech (Anthropic, OpenAI, Vue.js, etc.)',
+    description:
+      "Récupère les dernières actualités tech (Anthropic, OpenAI, Vue.js, etc.)",
   },
   async () => {
     const news = await getMorningNews();
-    
+
     return {
       content: [
         {
-          type: 'text',
+          type: "text",
           text: news,
         },
       ],
     };
-  }
+  },
 );
 
 // ===== PROMPT =====
 server.registerPrompt(
-  'morning_tech_brief',
+  "morning_tech_brief",
   {
-    description: 'Génère un brief matinal concis des actualités tech',
+    description: "Génère un brief matinal concis des actualités tech",
   },
   async () => {
     return {
       messages: [
         {
-          role: 'user',
+          role: "user",
           content: {
-            type: 'text',
+            type: "text",
             text: `Tu es mon assistant tech matinal. 
 
                     Utilise le tool get_morning_news pour récupérer les dernières actualités tech.
@@ -65,22 +67,22 @@ server.registerPrompt(
                     💡 CE QUE ÇA SIGNIFIE POUR MOI
                     [2-3 phrases sur l'impact potentiel pour un dev front-end WordPress/Vue.js]
 
-                    Sois concis, clair et va droit au but. Le brief ne doit pas dépasser 300 mots.`
-          }
-        }
-      ]
+                    Sois concis, clair et va droit au but. Le brief ne doit pas dépasser 300 mots.`,
+          },
+        },
+      ],
     };
-  }
+  },
 );
 
 // Démarre le serveur
 async function runServer() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('Morning Tech News MCP Server démarré ✅');
+  console.error("Morning Tech News MCP Server démarré ✅");
 }
 
 runServer().catch((error) => {
-  console.error('Erreur fatale:', error);
+  console.error("Erreur fatale:", error);
   process.exit(1);
 });

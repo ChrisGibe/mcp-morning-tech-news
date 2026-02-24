@@ -11,10 +11,11 @@ const server = new McpServer({
 });
 
 // ===== TOOL =====
-server.tool(
+server.registerTool(
   'get_morning_news',
-  'Récupère les dernières actualités tech (Anthropic, OpenAI, Vue.js, etc.)',
-  {},
+  {
+    description: 'Récupère les dernières actualités tech (Anthropic, OpenAI, Vue.js, etc.)',
+  },
   async () => {
     const news = await getMorningNews();
     
@@ -30,10 +31,11 @@ server.tool(
 );
 
 // ===== PROMPT =====
-server.prompt(
+server.registerPrompt(
   'morning_tech_brief',
-  'Génère un brief matinal concis des actualités tech',
-  {},
+  {
+    description: 'Génère un brief matinal concis des actualités tech',
+  },
   async () => {
     return {
       messages: [

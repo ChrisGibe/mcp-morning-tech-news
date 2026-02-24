@@ -32,8 +32,8 @@ Add the server to your Claude Desktop configuration file (`claude_desktop_config
 {
   "mcpServers": {
     "morning-tech-news": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp-morning-tech-news/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "mcp-morning-tech-news"]
     }
   }
 }

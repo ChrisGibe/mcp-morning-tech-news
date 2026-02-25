@@ -52,4 +52,5 @@ Then restart Claude Desktop. You can now:
 
 ## License
 
+
 MIT

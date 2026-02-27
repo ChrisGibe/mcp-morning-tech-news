@@ -6,6 +6,13 @@ export interface NewsArticle {
   details?: string;
 }
 
+export interface NewsXml {
+  title: string;
+  url: string;
+  date: string;
+  summary: string;
+}
+
 export interface NewsSource {
   name: string;
   fetchNews(): Promise<NewsArticle[]>;

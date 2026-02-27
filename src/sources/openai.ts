@@ -1,40 +1,38 @@
-import * as cheerio from 'cheerio';
-import { NewsArticle, NewsSource } from '../types.js';
+import * as cheerio from "cheerio";
+import { NewsXml, NewsSource } from "../types.js";
 
 export const openaiSource: NewsSource = {
-    name: "OpenAi",
+  name: "OpenAi",
 
-    async fetchNews(): Promise<NewsArticle[]> {
-        try {
-            const response = await fetch("https://openai.com/fr-FR/news/")
-            const html = await response.text()
+  async fetchNews(): Promise<NewsXml[]> {
+    try {
+      const response = await fetch("https://openai.com/news/rss.xml");
+      const xml = await response.text();
 
-            const $ = cheerio.load(html)
+      const $ = cheerio.load(xml, { xmlMode: true });
 
-            const articles: NewsArticle[] = []
+      const articles: NewsXml[] = [];
 
-            $('a, div, div.group').slice(0, 5).each((i, elem) => {
-                const title = $(elem).find('h2, h3, .title').first().text().trim();
-                const url = $(elem).find('a').first().attr('href') || '';
-                const dateText = $(elem).find('time, .date, .published').first().text().trim();
-                const ariaLabel = $(elem).find('a').first().attr('aria-label') || '';
+      $("item").slice(0, 5).each((_i, elem) => {
+          const title = $(elem).find("title").first().text().trim();
+          const url = $(elem).find("link").first().text().trim();
+          const dateText = $(elem).find("pubDate").first().text().trim();
+          const summary = $(elem).find("description").first().text().trim();
 
-                if(title && url) {
-                    articles.push({
-                        title,
-                        date: dateText || 'Date inconnue',
-                        url: url.startsWith('http') ? url : `https://openai.com/fr-FR/news/${url}`,
-                        summary: $(elem).find('p, .excerpt, .summary').first().text().trim(),
-                        details: ariaLabel
-                    })
-                }
-            })
+          if (title && url) {
+            articles.push({
+              title,
+              date: dateText || "Date inconnue",
+              url,
+              summary,
+            });
+          }
+        });
 
-            return articles
-            
-        } catch (error) {
-            console.error('Erreur lors du scraping OpenAI:', error)
-            return []
-        }
+      return articles;
+    } catch (error) {
+      console.error("Erreur lors du scraping OpenAI:", error);
+      return [];
     }
-}
+  },
+};

@@ -11,12 +11,14 @@ export const anthropicSource = {
                 const title = $(elem).find('h2, h3, .title').first().text().trim();
                 const url = $(elem).find('a').first().attr('href') || '';
                 const dateText = $(elem).find('time, .date, .published').first().text().trim();
+                const ariaLabel = $(elem).find('a').first().attr('aria-label') || '';
                 if (title && url) {
                     articles.push({
                         title,
                         date: dateText || 'Date inconnue',
                         url: url.startsWith('http') ? url : `https://www.anthropic.com${url}`,
-                        summary: $(elem).find('p, .excerpt, .summary').first().text().trim()
+                        summary: $(elem).find('p, .excerpt, .summary').first().text().trim(),
+                        details: ariaLabel
                     });
                 }
             });

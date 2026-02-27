@@ -17,7 +17,8 @@ src/
 ├── tools/
 │   └── get_morning_news.ts   # Aggregates news from all sources
 └── sources/
-    └── anthropic.ts          # Scrapes anthropic.com/news using Cheerio
+    ├── anthropic.ts          # Scrapes anthropic.com/news using Cheerio
+    └── openai.ts             # Scrapes openai.com/news using Cheerio
 ```
 
 ## Prerequisites

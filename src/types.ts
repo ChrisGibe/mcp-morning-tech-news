@@ -3,6 +3,7 @@ export interface NewsArticle {
   date: string;
   url: string;
   summary?: string;
+  sourceName?: string;
 }
 
 export interface NewsSource {

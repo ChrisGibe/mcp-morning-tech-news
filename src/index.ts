@@ -4,6 +4,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { getMorningNews } from "./tools/get_morning_news.js";
+import { getInfluencerInsights } from "./tools/get_influencer_insights.js";
 
 // Création du serveur MCP
 const server = new McpServer({
@@ -11,32 +12,41 @@ const server = new McpServer({
   version: "0.1.0",
 });
 
-// ===== TOOL =====
+// ===== TOOL 1 : NEWS GÉNÉRALES =====
 server.registerTool(
   "get_morning_news",
   {
-    description:
-      "Récupère les dernières actualités tech (Anthropic, OpenAI, Vue.js, etc.)",
+    description: "Récupère les dernières actualités tech (Anthropic, OpenAI, Vue.js, etc.)",
   },
   async () => {
     const news = await getMorningNews();
-
     return {
-      content: [
-        {
-          type: "text",
-          text: news,
-        },
-      ],
+      content: [{ type: "text", text: news }],
     };
+  }
+);
+
+// ===== TOOL 2 : INSIGHTS EXPERTS =====
+server.registerTool(
+  "get_influencer_insights",
+  {
+    description: "Récupère les dernières réflexions et tweets techniques du staff d'Anthropic (Boris Cherny, Amanda Askell, etc.)",
   },
+  async () => {
+    // On appelle la fonction que tu as déjà définie dans tools/get_influencer_insights.ts
+    const insights = await getInfluencerInsights();
+    return {
+      content: [{ type: "text", text: insights }],
+    };
+  }
 );
 
 // ===== PROMPT =====
+// Tu peux maintenant mettre à jour ton prompt pour qu'il utilise les DEUX tools si besoin
 server.registerPrompt(
   "morning_tech_brief",
   {
-    description: "Génère un brief matinal concis des actualités tech",
+    description: "Génère un brief matinal complet (News + Staff Insights)",
   },
   async () => {
     return {
@@ -47,27 +57,10 @@ server.registerPrompt(
             type: "text",
             text: `Tu es mon assistant tech matinal. 
 
-                    Utilise le tool get_morning_news pour récupérer les dernières actualités tech.
+                    1. Utilise get_morning_news pour l'actu officielle.
+                    2. Utilise get_influencer_insights pour voir ce que disent les experts d'Anthropic (notamment Boris Cherny sur Claude Code).
 
-                    Puis génère un brief matinal au format suivant :
-
-                    📰 BRIEF TECH DU MATIN
-                    Date : [aujourd'hui]
-
-                    🔥 TOP 3 ACTUS À RETENIR
-                    1. [Titre de l'actu la plus importante]
-                    → Pourquoi c'est important : [1 phrase]
-
-                    2. [Deuxième actu importante]
-                    → Pourquoi c'est important : [1 phrase]
-
-                    3. [Troisième actu importante]
-                    → Pourquoi c'est important : [1 phrase]
-
-                    💡 CE QUE ÇA SIGNIFIE POUR MOI
-                    [2-3 phrases sur l'impact potentiel pour un dev front-end WordPress/Vue.js]
-
-                    Sois concis, clair et va droit au but. Le brief ne doit pas dépasser 300 mots.`,
+                    Génère un brief concis, clair et va droit au but.`,
           },
         },
       ],

@@ -13,21 +13,22 @@ export const openaiSource: NewsSource = {
 
       const articles: NewsXml[] = [];
 
-      $("item").slice(0, 5).each((_i, elem) => {
-          const title = $(elem).find("title").first().text().trim();
-          const url = $(elem).find("link").first().text().trim();
-          const dateText = $(elem).find("pubDate").first().text().trim();
-          const summary = $(elem).find("description").first().text().trim();
+      for (const elem of $("item").slice(0, 5).toArray()) {
+        const title = $(elem).find("title").first().text().trim();
+        const url = $(elem).find("link").first().text().trim();
+        const dateText = $(elem).find("pubDate").first().text().trim();
+        const fullContent = $(elem).find("description").first().text().trim();
 
-          if (title && url) {
-            articles.push({
-              title,
-              date: dateText || "Date inconnue",
-              url,
-              summary,
-            });
-          }
-        });
+        if (title && url) {
+          articles.push({
+            title: title,
+            date: dateText || "Date inconnue",
+            url: url,
+            fullContent: fullContent,
+            summary: fullContent.substring(0, 500) + "..."
+          });
+        }
+      }
 
       return articles;
     } catch (error) {

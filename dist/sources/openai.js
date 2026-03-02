@@ -7,6 +7,7 @@ export const openaiSource = {
             const xml = await response.text();
             const $ = cheerio.load(xml, { xmlMode: true });
             const articles = [];
+<<<<<<< HEAD
             $("item").slice(0, 5).each((_i, elem) => {
                 const title = $(elem).find("title").first().text().trim();
                 const url = $(elem).find("link").first().text().trim();
@@ -21,6 +22,23 @@ export const openaiSource = {
                     });
                 }
             });
+=======
+            for (const elem of $("item").slice(0, 5).toArray()) {
+                const title = $(elem).find("title").first().text().trim();
+                const url = $(elem).find("link").first().text().trim();
+                const dateText = $(elem).find("pubDate").first().text().trim();
+                const fullContent = $(elem).find("description").first().text().trim();
+                if (title && url) {
+                    articles.push({
+                        title: title,
+                        date: dateText || "Date inconnue",
+                        url: url,
+                        fullContent: fullContent,
+                        summary: fullContent.substring(0, 200) + "..."
+                    });
+                }
+            }
+>>>>>>> dev/improve-css-selectors
             return articles;
         }
         catch (error) {

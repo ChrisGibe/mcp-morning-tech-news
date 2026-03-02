@@ -10,7 +10,11 @@ export async function getMorningNews() {
             allNews.push(`• ${article.title} (${article.date})`);
             allNews.push(`  ${article.url}`);
             if (article.summary) {
+<<<<<<< HEAD
                 allNews.push(`  📝 ${article.summary.substring(0, 100)}...`);
+=======
+                allNews.push(`  📝 ${article.summary}`);
+>>>>>>> dev/improve-css-selectors
             }
             allNews.push('');
         });
@@ -21,7 +25,11 @@ export async function getMorningNews() {
             allNews.push(`• ${article.title} (${article.date})`);
             allNews.push(`  ${article.url}`);
             if (article.summary) {
+<<<<<<< HEAD
                 allNews.push(`  📝 ${article.summary.substring(0, 100)}...`);
+=======
+                allNews.push(`  📝 ${article.summary}`);
+>>>>>>> dev/improve-css-selectors
             }
             allNews.push('');
         });
